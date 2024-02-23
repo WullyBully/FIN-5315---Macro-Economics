@@ -1,0 +1,549 @@
+---
+title: 'Homework #1'
+subtitle: Classical and Keynesian Economies
+author: Brady Bulls
+date: today
+date-format: "MMMM D YYYY"
+format:
+  html:
+    theme: flatly
+    toc: false
+warning: false
+---
+
+```{python}
+#| echo: false
+# Initialzie needed libraries
+import numpy as np
+from IPython.display import display, Markdown
+import matplotlib.pyplot as plt
+```
+
+## 1. Consider the following Classical Economy
+
+```{python}
+#| echo: false
+
+# Initialize the given variables
+K = 200
+L = 200
+G = 40
+T = 40
+
+# Create a formatted Markdown string with LaTeX for your variables
+md_text = f"""
+The variables and functions are as follows:
+
+Variables
+
+- **Aggregate Capital Stock: $\\bar K$** = {K}
+- **Aggregate Labor Supply: $\\bar L$** = {L}
+- **Government Spending: $\\bar G$** = {G}
+- **Tax Collection: $\\bar T$** = {T}
+
+Functions
+
+- **Production Function:** $Y = K^{{0.4}}L^{{0.6}}$
+- **Investment Function:** $I = 45 - 100r$
+- **Consumption Function:** $C = 8 + 0.7Y_d$
+"""
+
+# Display the formatted Markdown text
+display(Markdown(md_text))
+```
+
+```{python}
+#| echo: false
+# Build functions and formulas
+
+def production_function(K, L, alpha=0.4):
+    Y = K**alpha * L**(1 - alpha)
+    return Y
+
+def consumption_function(Y, T):
+    Y_d = Y - T
+    C = 8 + 0.7*Y_d
+    return C
+
+def investment_function(r):
+    I = 45 - 100 * r
+    return I
+
+def aggregate_demand(C, I, G):
+    AD = C + I + G
+    return AD
+```
+
+##### A. Define the term Competitive Equilibrium.
+
+Competitive equilibrium is the point that the entirety of the market has reached its equilibrium point. That is, all four of the macro-economic markets *(the goods market, the capital market, the loan-able funds market, and the labor market)* have all coalesced.
+
+##### B. What is Walra's law?
+
+Walras law states that with $n$ markets, if the $n - 1$ market reaches equilibrium, then the $n^{th}$ market will also be in equilibrium. In more common terms, if you know that all but one market is in equilibrium, you can be certain the last market is also in equilibrium.
+
+##### C. Find the competitive equilibrium by leaving out the loan-able funds market in initial calculations. Then verify *Walra's Law* by showing that the loan-able funds market clears. Draw diagrams which show the supply and demand curves for each of the markets and show the competitive pries and allocations.
+
+{{< pagebreak >}}
+
+###### The Capital Market:
+
+Given:<br>$\bar L = 200$<br> $\bar K = 200$
+
+$$
+\begin{align*}
+[1] & \quad Max\prod_K = P K^{0.4}L^{0.6} - KR - WL\\
+[2] & \quad 0.4PK^{-0.6}L^{0.6} - R = 0\\
+[3] & \quad \frac{R}{P} = 0.4(\frac{L}{K})^{0.6}\\
+[4] & \quad \frac{R}{P} = 0.4(\frac{200}{200})^{0.6} = 0.40\\
+\end{align*}
+$$
+
+```{python}
+#| echo: false
+#| fig-align: center
+
+k = np.linspace(0, 450, 1000)
+r_p = 0.4 * (L/k)**0.6
+
+plt.figure(figsize=(7,6))
+plt.title('Capital Market')
+plt.xlabel('$K$')
+plt.ylabel('$\\frac {R}{P}$', rotation=0)
+plt.plot(k, r_p, label='$K_d$')
+plt.axvline(200, label='$\\bar L$', color='red')
+plt.grid(True)
+
+x_min = 0
+x_max = 450
+y_min = 0
+y_max = 0.8
+plt.xlim(x_min, x_max)
+plt.ylim(y_min, y_max)
+plt.legend()
+plt.tight_layout()
+```
+
+{{< pagebreak >}}
+
+###### The Labor Market:
+
+$$
+\begin{align*}
+[1] & \quad Max\prod_L = P K^{0.4}L^{0.6} - KR - WL\\
+[2] & \quad 0.6PK^{0.4}L^{-0.4} - W = 0\\
+[3] & \quad \frac{W}{P} = 0.6(\frac{L}{K})^{0.6}\\
+[4] & \quad \frac{W}{P} = 0.6(\frac{200}{200})^{0.4} = 0.60\\
+\end{align*}
+$$
+
+```{python}
+#| echo: false
+#| fig-align: center
+
+l = np.linspace(0, 450, 1000)
+w_p = 0.6 * (K/l)**0.4
+
+plt.figure(figsize=(7,6))
+plt.title('Labor Market')
+plt.xlabel('$L$')
+plt.ylabel('$\\frac {W}{P}$', rotation=0)
+plt.plot(l, w_p, label='$L_d$')
+plt.axvline(200, label='$\\bar K$', color='red')
+plt.grid(True)
+
+x_min = 0
+x_max = 450
+y_min = 0
+y_max = 1.2
+plt.xlim(x_min, x_max)
+plt.ylim(y_min, y_max)
+plt.legend()
+plt.tight_layout()
+```
+
+{{< pagebreak >}}
+
+###### The Goods Market:
+
+$$
+\begin{align*}
+[1] & \quad Y_d = Y - T = 200 - 40 = 160\\
+[2] & \quad C = 8 + 0.7*Y_d = 8 + 112 = 120 \\
+[3] & \quad S^P = Y_d - C = 160 - 120 = 40\\
+[4] & \quad S^G = 40 - 40 - 0\\
+[5] & \quad AD = C + S + G = 120 + 40 + 0 = 200
+\end{align*}
+$$
+
+```{python}
+#| echo: false
+#| fig-align: center
+r = np.linspace(0, 0.5, 1000)
+Y = production_function(K, L)
+C = consumption_function(Y, T)
+I = investment_function(r)
+AD = aggregate_demand(C, I, G)
+S = Y - C - G
+# Plot the goods function
+plt.figure(figsize=(7, 6))
+plt.plot(AD, r, label='Aggregate Demand $AD = C + I + G$')
+plt.axvline(Y, label='Full Employment', color='r')
+plt.axhline(0.05, color='g', linestyle='--', label='r = 0.5')
+plt.title('The Goods Market')
+plt.xlabel('Output ($Y$)')
+plt.ylabel('Interest Rate ($r$)')
+
+x_min = 180
+x_max = Y + (Y - x_min)
+y_min = .01
+y_max = 0.3
+
+plt.xlim(x_min, x_max)
+plt.ylim(y_min, y_max)
+
+plt.axhline(0, color='black', lw=0.5)  # Adding x-axis
+plt.axvline(0, color='black', lw=0.5)  # Adding y-axis
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+
+plt.legend()
+plt.tight_layout()
+```
+
+{{< pagebreak >}}
+
+###### Walras Law Verification Using the Loanable Funds Market
+
+$$
+\begin{align*}
+[1] & \quad S = I(r) = 45 - 100r\\
+[2] & \quad 40 = 45 - 100r\\
+[3] & \quad r = \frac{5}{100} = 0.5\\
+\end{align*}
+$$
+
+```{python}
+#| echo: false
+#| fig-align: center
+r = np.linspace(0, 0.5, 1000)
+Y = production_function(K, L)
+C = consumption_function(Y, T)
+I = investment_function(r)
+AD = aggregate_demand(C, I, G)
+S = Y - C - G
+# Plot the goods function
+plt.figure(figsize=(7, 6))
+plt.plot(I, r, label='Investment ($I_r$): $AD = C + I + G$')
+plt.axvline(S, label='Savings', color='r')
+plt.axhline(0.05, color='g', linestyle='--', label='r = 0.5')
+plt.title('Loan-able Funds Market')
+plt.xlabel('Savings ($S$)')
+plt.ylabel('Interest Rate ($r$)')
+
+x_min = 0
+x_max = S + (S - x_min)
+y_min = 0
+y_max = 0.3
+
+plt.xlim(x_min, x_max)
+plt.ylim(y_min, y_max)
+
+plt.axhline(0, color='black', lw=0.5)  # Adding x-axis
+plt.axvline(0, color='black', lw=0.5)  # Adding y-axis
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+
+plt.legend()
+plt.tight_layout()
+```
+
+**Walra's Law holds true. We confirmed that three of the four markets were in equilibrium, and the fourth and final market was indeed also in equilibrium.**
+
+{{< pagebreak >}}
+
+##### D. Suppose the government spending increases to $\bar G = 42$ and taxes are cut to $\bar T = 38$.
+
+i.  Find the equilibrium level of output, consumption, investment and interest rates.
+
+ii. Plot the figures of both the loan-able funds market and goods market illustrating the before and after economic positions for the economy.
+
+iii. What happens to the level of investment in the economy as a result of the spending increase? Does the investment implication make sense relative to the assumption that the capital stock is unchanged?
+
+###### i.
+
+$$
+\begin{align*}
+&Output & Consumption && Loanable\quad Funds\\
+&[1]\quad AD = C + I + G &[1]\quad C = 8 + 0.7Y_d &&[1]\quad I_{(r)} = 45 - 100r\\
+&[2]\quad AD = 121.4 + 36.6 + 42 = 200 &&&[2]\quad 36.6 = 45-100r\\
+& &  &&[3]\quad r = 0.084 
+\end{align*}
+$$
+
+Adjusted Output
+
+```{python}
+#| echo: false
+#| fig-align: center
+# Goods Market
+g_new = 42
+t_new = 38
+r = np.linspace(0, 0.5, 1000)
+Y = production_function(K, L)
+C = consumption_function(Y, T)
+I = investment_function(r)
+AD = aggregate_demand(C, I, G)
+S = Y - C - G
+c_new = consumption_function(Y, t_new)
+s_new = Y - c_new - g_new
+ad_new = aggregate_demand(c_new, I, g_new)
+
+# Plot the goods function
+plt.figure(figsize=(7, 6))
+plt.plot(AD, r, label='Aggregate Demand:\n$AD = C + I + G$')
+plt.plot(ad_new, r, label='Adjusted Aggregate Demand')
+plt.axvline(Y, label='Full Employment', color='r')
+plt.axhline(0.084, color='g', linestyle='--', label='r = 0.084')
+plt.title('The Adjusted Goods Market')
+plt.xlabel('Output ($Y$)')
+plt.ylabel('Interest Rate ($r$)')
+
+x_min = 180
+x_max = Y + (Y - x_min)
+y_min = .01
+y_max = 0.3
+
+plt.xlim(x_min, x_max)
+plt.ylim(y_min, y_max)
+
+plt.axhline(0, color='black', lw=0.5)  # Adding x-axis
+plt.axvline(0, color='black', lw=0.5)  # Adding y-axis
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+
+plt.legend()
+plt.tight_layout()
+```
+
+{{< pagebreak >}}
+
+Adjusted Loan-able Funds
+
+```{python}
+#| echo: false
+#| fig-align: center
+g_new = 42
+t_new = 38
+r = np.linspace(0, 0.5, 1000)
+Y = production_function(K, L)
+C = consumption_function(Y, T)
+I = investment_function(r)
+AD = aggregate_demand(C, I, G)
+S = Y - C - G
+c_new = consumption_function(Y, t_new)
+s_new = Y - c_new - g_new
+ad_new = aggregate_demand(c_new, I, g_new)
+# Plot the goods function
+plt.figure(figsize=(7, 6))
+plt.plot(I, r, label='Investment ($I_r$): $AD = C + I + G$')
+plt.axvline(S, label='Savings', color='r')
+plt.axvline(s_new, label='Adjusted Savings: 36.6', color='orange')
+plt.axhline(0.084, color='g', linestyle='--', label='r = 0.084')
+plt.title('Adjusted Loan-able Funds Market')
+plt.xlabel('Savings ($S$)')
+plt.ylabel('Interest Rate ($r$)')
+
+x_min = 0
+x_max = S + (S - x_min)
+y_min = 0
+y_max = 0.3
+
+plt.xlim(x_min, x_max)
+plt.ylim(y_min, y_max)
+
+plt.axhline(0, color='black', lw=0.5)  # Adding x-axis
+plt.axvline(0, color='black', lw=0.5)  # Adding y-axis
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+
+plt.legend()
+plt.tight_layout()
+```
+
+{{< pagebreak >}}
+
+Suppose that in addition to the information described above, we know the following:
+
+**Money Demand:** $L^d = 5Y$
+
+**Nominal Money Supply:** $M = 100$
+
+e.  Find the price level for this economy
+
+f.  Find the nominal wage rate and the nominal rental rate
+
+g.  How does this problem illustrate the classical dichotomy?
+
+###### e. Find the price level for this economy
+
+$$
+\begin{align*}
+&[1]\quad MV = PY \\
+&[2]\quad \frac{M}{P} = L^d \\
+&[3]\quad \frac{M}{P} = 5Y\\
+&[4]\quad \frac{1000}{P} = 5(200)\\
+&[5]\quad P = 1
+\end{align*}
+$$
+
+###### f. Find the nominal wage rate and the nominal rental rate
+
+$$
+\begin{align*}
+&[1]\quad \frac{R}{P} = 0.4 &[1]\quad \frac{W}{P} = 0.6\\
+&[2]\quad R = 0.4 &[2]\quad W = 0.6\\
+\end{align*}
+$$
+
+###### g. How does this problem illustrate the classical dichotomy?
+
+The classical dichotomy is the separation of the real and nominal variables. We were able to completely solve for all our nominal variables without the use of the real variables. We were also able to solve for the real variables without need of the nominal ones. This is a clear demonstration of the separation followed by classical economists.
+
+{{< pagebreak >}}
+
+## 2. Consider the following Keynesian Economy
+
+```{python}
+#| echo: false
+from IPython.display import display, Markdown
+
+# Initialize the given variables
+k_t = 200
+l_t = 200
+g_t = 40
+t_t = 40
+m_supply = 900
+price_level = 1
+
+# Create a formatted Markdown string with LaTeX for your variables
+md_text = f"""
+The variables and functions are as follows:
+
+Variables
+
+- **Capital Stock: $K_t$** = {k_t}
+- **Labor Supply: $L_t$** = {l_t}
+- **Government Spending: $\\bar G_t$** = {g_t}
+- **Tax Collection: $\\bar T_t$** = {t_t}
+- **Price Level:** $\\bar P_t = {price_level}$
+
+Functions
+
+- **Production Function:** $Y_t = K^{{0.4}}L^{{0.6}}$
+- **Investment Function:** $I_t = 45 - 100r$
+- **Consumption Function:** $C_t = 8 + 0.7Y_d$
+- **Money Demand Function:** $(\\frac{{M_t}}{{P_t}})^d = 5Y_t - 2000r$
+- **Money Supply:** $\\bar M_t = {m_supply}$
+"""
+
+# Display the formatted Markdown text
+display(Markdown(md_text))
+```
+
+##### a. Find an expression for the IS curve.
+
+$$
+\begin{align*}
+&[1]\quad r = \frac{1}{i_t}(a - b(T_t) + \bar I + G_t) - \frac{(1-b)}{i}Y_t\\
+&[2]\quad r = \frac{1}{100}(8 - 0.7(40) + 45 + 40) - \frac{(1-0.7)}{100}Y_t\\
+& \text Simplify\\
+&[3]\quad r = -0.003Y_t + 0.65
+\end{align*}
+$$
+
+##### b. Find an expression for the LM curve.
+
+$$
+\begin{align*}
+&[1]\quad (\frac{M}{P})^d = 5Y_t - 2000r_t\\
+&[2]\quad 900 = 5Y - 2000r_t\\
+&[3]\quad r = 0.0025Y - 0.45
+\end{align*}
+$$
+
+##### c. Find an expression for the aggregate demand curve (that relates price and output).
+
+$$
+\begin{align*}
+&[1]\quad r = -0.003Y + 0.65 = 0.0025Y - \frac{M}{2000}\\
+&[2]\quad -0.003Y - 0.0025Y = \frac{M}{2000P} - 0.65\\
+&[3]\quad Y = \frac{\frac{M}{2000P}+0.65}{0.0055}
+\end{align*}
+$$
+
+{{< pagebreak >}}
+
+##### d. What are the short run equilibrium values of output, interest rates, and prices?
+
+Since we have already calculated the IS curve and the LM curve, we just need to set them equal and solve for our values.
+
+$$
+\begin{align*}
+-0.003Y_t + 0.65 &= 0.0025Y_t - 0.45\\
+-0.003Y + 1.1 &= 0.0055Y\\
+Y_t &= 200\\
+\\
+r &= - 0.003(200) + 0.65\\
+r &= 0.05
+\end{align*}
+$$
+
+##### e. What are the long run equilibrium values for output, interest rates, and prices?
+
+Since there has been no economic shocks or money supply change, the short-run is currently in the long-run, so the levels will be the same as previously calculated.
+
+##### f. Suppose that as a result of the 2006/2007 housing bust, the investment function shifts to:
+
+**Investment Function:** $I_t = 43 - 100r_t$
+
+i.  Find the new equilibrium values for output, interest rates, and prices.
+
+ii. Suppose the government adopts a classical position to let market forces move the economy back to the long run. Carefully explain what will happen as the economy shifts form Long-run to Short-run, then from Short-run back to Long-run.
+
+iii. Suppose that the Federal Resever (central bank) decides that adopting the classical position is too painful and wants to increase the money supply by exactly the right amount to get the long run equilibrium output level. What will $\bar M_t$ have to increase to?
+
+##### i. Find the new equilibrium
+
+$$
+\begin{align*}
+&[1]\quad r = \frac{1}{100}(8 - 0.7(40) + 43 + 40) - \frac{(1-0.7)}{100}Y_t\\
+&[2]\quad r = 0.01(63) - 0.003Y_t\\
+&[3]\quad r = -0.003Y_t + 0.63
+\end{align*}
+$$
+
+The LM remains unchanged
+
+$$
+\begin{align*}
+&[1]\quad 0.0025Y_t -0.45 = -0.003Y_t + 0.63\\
+&[2]\quad 0.005Y_t = 1.08\\
+&[3]\quad Y_t = 196.364\quad,  \quad r = 0.0409
+\end{align*}
+$$
+
+##### ii. Describe the classical response to these changes.
+
+In the short-run, with classical policies, the decreased investment will lead to a fall in the aggregate demand. This cascades into a short run fall in output and a decline in employment. With employment falling, wages will also begin to decline. Since prices are sticky in the short-run, the economy will operate at this reduced capacity until it is able to transition out. Overtime, the price-level will begin to fall, the real variables will adjust, employment will rise, output will rise, and the economy will enter the long-run at the new, lower, price-level.
+
+##### iii. Describe the central bank intervention.
+
+By increasing the money supply by the perfect amount, the central bank can stave off the fall in output and keep employment steady in its current long-run form.
+
+$$
+\begin{align*}
+r &= 0.0409\\
+\frac{M}{P} &= 5Y_t - 2000r_t\\
+M &= 5(200) - 2000(0.0409)\\
+M &= 918.20
+\end{align*}
+$$
+
+If the central bank wants to maintain its current long run positions of output and employment, it should increase the money supply from 900 to 918.20.
