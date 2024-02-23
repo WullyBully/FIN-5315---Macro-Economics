@@ -6,7 +6,7 @@ date: today
 date-format: "MMMM D YYYY"
 format:
   html:
-    theme: flatly
+    theme: cerulean
     toc: false
 warning: false
 ---
