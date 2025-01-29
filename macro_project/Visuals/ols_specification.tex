@@ -1,0 +1,30 @@
+\documentclass[12pt]{article}  % Set the document to use 12-point font size
+\usepackage{amsmath}
+\usepackage{newtxtext}  % Times New Roman text font
+\usepackage[T1]{fontenc}  % Ensure proper encoding
+
+\begin{document}
+
+\section*{Regression Model Description}
+
+The regression model estimated is as follows:
+\begin{align}
+\text{GDP per capita growth} = & \ \beta_0 + \beta_1 \text{Population Growth} + \beta_2 \text{Gross Capital Formation Growth} \notag \\
+& + \beta_3 \text{Life Expectancy Change} + \beta_4 \text{Foreign Direct Investment Change} \notag \\
+& + \beta_5 \text{Student Population Change} + \beta_6 \text{Unemployment Change} \notag \\
+& + \beta_7 \text{Internet Usage Change} + \beta_8 \text{Savings Rate Change} \notag \\
+& + \beta_9 \text{Uranium Price Change} + \epsilon \notag
+\end{align}
+
+where:
+\begin{itemize}
+    \item $\beta_0$ is the intercept of the model.
+    \item $\beta_1$ through $\beta_9$ are the coefficients that measure the impact of each independent variable on the dependent variable, GDP per capita growth.
+    \item $\text{Population Growth}$, $\text{Gross Capital Formation Growth}$, $\text{Life Expectancy Change}$, $\text{Foreign Direct Investment Change}$, $\text{Student Population Change}$, $\text{Unemployment Change}$, $\text{Internet Usage Change}$, $\text{Savings Rate Change}$, and $\text{Uranium Price Change}$ are the independent variables considered in the model.
+    \item $\epsilon$ represents the error term, accounting for the variation in GDP per capita growth not explained by the model.
+\end{itemize}
+
+The aim of the model is to analyze the effect of various economic, demographic, and technological factors on the economic growth measured by GDP per capita. The coefficients $\beta_1$ to $\beta_9$ provide insights into the sensitivity of GDP growth to changes in each of these factors under the assumption of ceteris paribus.
+
+\end{document}
+
